@@ -1,0 +1,166 @@
+/* Box sizing rules */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Remove default padding */
+ul[class],
+ol[class] {
+  padding: 0;
+}
+
+/* Remove default margin */
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+ul[class],
+ol[class],
+li,
+figure,
+figcaption,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+/* Set core body defaults */
+body {
+  min-height: 100vh;
+  scroll-behavior: smooth;
+  text-rendering: optimizeSpeed;
+  line-height: 1.5;
+}
+
+/* Remove list styles on ul, ol elements with a class attribute */
+ul[class],
+ol[class] {
+  list-style: none;
+}
+
+/* A elements that don't have a class get default styles */
+a:not([class]) {
+  text-decoration-skip-ink: auto;
+}
+
+/* Make images easier to work with */
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* Natural flow and rhythm in articles by default */
+article > * + * {
+  margin-top: 1em;
+}
+
+/* Inherit fonts for inputs and buttons */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/* Remove all animations and transitions for people that prefer not to see them */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+#app {
+    padding: 1rem;
+    font-family: sans-serif;
+}
+
+.app-title {
+    text-align: center;
+}
+
+.state {
+    text-align: center;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+#timeline {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+#timeline .timeline-event {
+    margin-bottom: 1rem;
+}
+
+.timeline-event--date {
+    font-size: 0.9rem;
+    color: #999;
+    margin-bottom: 0.4rem;
+}
+
+.actions {
+    display: flex;
+    margin-left: -0.5rem;
+}
+
+.actions--button {
+    background: 0;
+    padding: 0.5rem;
+    border-radius: 5px;
+    margin-bottom: 0.5rem;
+    margin-left: 0.5rem;
+    border-color: #999;
+
+    flex: 1 1 0;
+}
+
+.add-note {
+    display: flex;
+    margin-left: -0.5rem;
+}
+
+.add-note--textarea {
+    border-radius: 5px;
+    margin-bottom: 0.5rem;
+    width: 300px;
+    height: 100px;
+    border-color: #999;
+    background-color: #eee;
+    font-size: 1.1rem;
+    padding: 0.2rem;
+    margin-left: 0.5rem;
+
+    flex: 1 1 auto;
+}
+
+.add-note--button {
+    font-size: 1rem;
+    padding: 0.5rem;
+    border-radius: 5px;
+    margin-left: 0.5rem;
+    height: 100px;
+    background: 0;
+
+    flex: 1 1 auto;
+}
+
+.add-photo--input {
+    display: none;
+}
+
+.add-photo--button {
+    display: block;
+    padding: 0.5rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    text-align: center;
+}
