@@ -15,20 +15,13 @@
  (fn [{:keys [db]} _]
    {:db (assoc db :current-bake bake/new-bake)}))
 
-(defn- create-step-event
-  [step]
-  {:type :step :step step :time (js/Date.)})
-
 (reg-event-fx
  :transition!
- (fn [{:keys [db]} [_ current-state transition]]
-   (let
-     [new-state (get-in bake-states/states [current-state transition])
-      step (create-step-event transition)]
-    {:db (->
-            db
-            (assoc-in [:current-bake :state] new-state)
-            (update-in [:current-bake :steps] conj step))})))
+ (fn [{:keys [db]} [_ new-state step]]
+   {:db (->
+         db
+         (assoc-in [:current-bake :state] new-state)
+         (update-in [:current-bake :steps] conj step))}))
 
 (reg-event-fx
  :add-note
