@@ -11,3 +11,9 @@
  :<- [:current-bake]
  (fn [current-bake _]
    (:state current-bake)))
+
+(reg-sub
+ :steps
+ :<- [:current-bake]
+ (fn [current-bake _]
+   (:steps current-bake)))
