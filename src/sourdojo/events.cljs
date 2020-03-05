@@ -34,3 +34,8 @@
  :add-note
  (fn [{:keys [db]} [_ note]]
    {:db (update-in db [:current-bake :steps] conj note)}))
+
+(reg-event-fx
+ :add-photo
+ (fn [{:keys [db]} [_ photo]]
+   {:db (update-in db [:current-bake :steps] conj photo)}))

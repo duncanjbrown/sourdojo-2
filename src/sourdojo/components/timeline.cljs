@@ -12,6 +12,7 @@
 
 (defn- event
   [event]
+  (println event)
   (cond
     (= :note (:type event))
     [:div
