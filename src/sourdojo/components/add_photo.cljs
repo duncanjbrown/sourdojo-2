@@ -4,7 +4,7 @@
 
 (defn- create-photo-event
   [photo-url]
-  {:type :photo :step :photo :url photo-url :time (js/Date.)})
+  {:type :photo :url photo-url :time (js/Date.)})
 
 (defn- handle-photo-capture
   [event]

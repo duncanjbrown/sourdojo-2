@@ -5,7 +5,7 @@
 
 (defn- create-note-event
   [note-contents]
-  {:type :note :step :note :note note-contents :time (js/Date.)})
+  {:type :note :note note-contents :time (js/Date.)})
 
 (defn render
   [event-list]
