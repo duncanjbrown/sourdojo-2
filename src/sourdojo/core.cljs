@@ -3,6 +3,7 @@
             [re-frame.core :as rf]
             [sourdojo.subs]
             [sourdojo.events]
+            [sourdojo.env :as env]
             [sourdojo.components.add-note :as add-note]
             [sourdojo.components.add-photo :as add-photo]
             [sourdojo.components.current-state :as current-state]
@@ -11,6 +12,7 @@
 
 (defn app []
   [:div
+    [:p (str "Current environment: " (:environment env/config))]
     [current-state/render @(rf/subscribe [:current-state])]
     [step-buttons/render @(rf/subscribe [:current-state])]
     [add-note/render]

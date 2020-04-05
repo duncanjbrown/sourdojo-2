@@ -1,0 +1,2 @@
+{:environment #profile {:local   "local"
+                        :prod    "prod"}}
