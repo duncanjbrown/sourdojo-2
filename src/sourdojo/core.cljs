@@ -12,7 +12,6 @@
 
 (defn app []
   [:div
-    [:p (str "Current environment: " (:environment env/config))]
     [current-state/render @(rf/subscribe [:current-state])]
     [step-buttons/render @(rf/subscribe [:current-state])]
     [add-note/render]
