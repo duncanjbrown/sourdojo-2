@@ -6,6 +6,7 @@
             [sourdojo.subs]
             [sourdojo.events]
             [sourdojo.env :as env]
+            [sourdojo.components.user-info :as user-info]
             [sourdojo.components.add-note :as add-note]
             [sourdojo.components.add-photo :as add-photo]
             [sourdojo.components.current-state :as current-state]
@@ -14,6 +15,7 @@
 
 (defn app []
   [:div
+    [user-info/render @(rf/subscribe [:user])]
     [current-state/render @(rf/subscribe [:current-state])]
     [step-buttons/render @(rf/subscribe [:current-state])]
     [add-note/render]

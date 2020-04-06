@@ -1,4 +1,5 @@
 (ns sourdojo.db)
 
 (def initial-db
-  {:current-bake nil})
+  {:current-bake nil
+   :user nil})

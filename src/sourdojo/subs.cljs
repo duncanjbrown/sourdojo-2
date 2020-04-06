@@ -2,6 +2,11 @@
   (:require [re-frame.core :refer [reg-sub subscribe]]))
 
 (reg-sub
+ :user
+ (fn [db _]
+   (:user db)))
+
+(reg-sub
  :current-bake
  (fn [db _]
    (:current-bake db)))
