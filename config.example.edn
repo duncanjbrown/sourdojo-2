@@ -1,2 +1,14 @@
-{:environment #profile {:local   "local"
-                        :prod    "prod"}}
+{:environment #profile {:local "local"
+                         :prod "prod"}
+  :firebase #profile {:local {:apiKey        ""
+                              :appId         ""
+                              :projectId     ""
+                              :authDomain    ""
+                              :databaseURL   ""
+                              :storageBucket ""}
+                      :prod   {:apiKey        ""
+                              :appId         ""
+                              :projectId     ""
+                              :authDomain    ""
+                              :databaseURL   ""
+                              :storageBucket ""}}}
