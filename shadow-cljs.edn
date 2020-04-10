@@ -12,7 +12,9 @@
          :output-dir "dist/js"
          :target :browser}}
  :dependencies [[re-frame "0.10.7"]
+                [refactor-nrepl "2.5.0"]
                 [aero "1.1.6"]
                 [com.andrewmcveigh/cljs-time "0.5.2"]]
- :nrepl {:port 3333}
+ :nrepl {:port 3333
+         :middleware [refactor-nrepl.middleware/wrap-refactor]}
  :source-paths ["src"]}
