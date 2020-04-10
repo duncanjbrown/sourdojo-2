@@ -1,4 +1,5 @@
 .shadow-cljs
+.nrepl-port
 node_modules
 public/js
 config.edn
