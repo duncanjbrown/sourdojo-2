@@ -1,0 +1,4 @@
+- add "save" feature
+  - auth -> convert to email flow
+  - persist current bake
+  - resurrect current bake on revisit
