@@ -1,5 +1,5 @@
 (ns sourdojo.core
-  (:require [reagent.core :as r]
+  (:require [reagent.dom :as r]
             [re-frame.core :as rf]
             [sourdojo.subs]
             [sourdojo.events]
