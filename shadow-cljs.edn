@@ -4,8 +4,14 @@
         :output-dir "public/js"
         :devtools {:after-load sourdojo.core/start!
                    :http-port 3000
-                   :http-root "public"}
+                   :http-root "public"
+                   :preloads [day8.re-frame-10x.preload]}
          :target :browser
+         :closure-defines {"re_frame.trace.trace_enabled_QMARK_" true}
+         :compiler-options {
+           :external-config {
+             :devtools/config {
+                :features-to-install [:formatters :hints]}}}
          :build-hooks [(sourdojo.build/load-env)]}
   :dist {:asset-path "/js"
          :modules {:main {:init-fn sourdojo.core/main}}
@@ -13,6 +19,8 @@
          :target :browser}}
  :dependencies [[re-frame "0.12.0"]
                 [refactor-nrepl "2.5.0"]
+                [binaryage/devtools "1.0.0"]
+                [day8.re-frame/re-frame-10x "0.6.2"]
                 [aero "1.1.6"]
                 [com.andrewmcveigh/cljs-time "0.5.2"]]
  :nrepl {:port 3333
