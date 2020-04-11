@@ -3,7 +3,13 @@
 
 (defn render
   [user]
-  (if user
-    [:p (str "User ID: " (:id user))]
-    [:p "Not logged in "
-     [:a {:href "#" :on-click #(firebase-auth/sign-in)} "Sign in"]]))
+  [:div.current-user
+    (cond
+      (map? user)
+      [:p (str "Signed in. ID: " (:id user) " ")
+        [:a {:href "#" :on-click #(firebase-auth/sign-out)} "Sign out"]]
+      (false? user)
+      [:p "Not signed in. "
+        [:a {:href "#" :on-click #(firebase-auth/sign-in)} "Sign in"]]
+      (nil? user)
+      nil)])

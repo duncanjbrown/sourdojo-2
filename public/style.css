@@ -164,3 +164,7 @@ select {
     border: 1px solid #ccc;
     text-align: center;
 }
+
+.current-user {
+    height: 24px;
+}

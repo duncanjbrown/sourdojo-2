@@ -6,6 +6,16 @@
    [re-frame.core :refer [reg-event-db reg-event-fx]]))
 
 (reg-event-fx
+  :signed-in
+  (fn [{:keys [db]} [_ user]]
+    {:db (assoc db :user user)}))
+
+(reg-event-fx
+  :signed-out
+  (fn [{:keys [db]} _]
+    {:db (assoc db :user false)}))
+
+(reg-event-fx
  :initialise-db
  (fn [{:keys [db]} _]
    {:db initial-db}))
