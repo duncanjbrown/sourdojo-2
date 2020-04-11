@@ -12,16 +12,16 @@
 
 (defn- event
   [event]
-  (cond
-    (= :note (:type event))
+  (case (:type event)
+    :note
     [:div
       [:p.timeline-event--date (format-date (:time event))]
       [:p.timeline-event--content (:note event)]]
-    (= :photo (:type event))
+    :photo
     [:div
       [:p.timeline-event--date (format-date (:time event))]
       [:img.timeline-event--image {:src (:url event)}]]
-    (= :step (:type event))
+    :step
     [:div
       [:p.timeline-event--date (format-date (:time event))]
       [:h4.timeline-event--title (bake-states/translate (:step event))]]))
