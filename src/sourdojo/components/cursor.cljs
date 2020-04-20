@@ -15,7 +15,7 @@
     [add-photo/render]])
 
 (defn render [current-state]
-  [:div.cursor
+  [:div#cursor
    (if (= :origin current-state)
      (starting-cursor)
      (in-progress-cursor))])

@@ -29,6 +29,5 @@
 
 (defn render
   [steps current-state]
-  [:div
-    (into [:ul#timeline] (map #(vector :li.timeline-event (event %)) steps))
-    [cursor/render current-state]])
+  (let [step-blocks (map #(vector :li.timeline-event (event %)) steps)]
+    (into [:ul#timeline] (into step-blocks (vector [cursor/render current-state])))))
