@@ -1,7 +1,8 @@
 (ns sourdojo.bake-state-machine)
 
 (def states
-  {:new {:begin-bake :mix}
+  {:origin {:start :new}
+   :new {:begin-bake :mix}
    :mix {:begin-autolyse :autolysing
          :add-starter-begin-bulk :bulk-fermentation}
    :autolysing {:begin-bulk :bulk-fermentation}
@@ -14,7 +15,8 @@
 
 (defn translate
   [sym]
-  (sym {:new "Ready to bake"
+  (sym {:start "Started baking!"
+        :new "Ready to bake"
         :begin-bake "🥣Mix"
         :mix "Mix"
         :stretch-and-fold "💪 Stretch and fold"

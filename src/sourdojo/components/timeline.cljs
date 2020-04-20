@@ -1,5 +1,6 @@
 (ns sourdojo.components.timeline
   (:require [re-frame.core :as rf]
+            [sourdojo.components.cursor :as cursor]
             [sourdojo.bake-state-machine :as bake-states]
             [cljs-time.coerce :as time]
             [cljs-time.format :as timeformat]))
@@ -27,5 +28,7 @@
       [:h4.timeline-event--title (bake-states/translate (:step event))]]))
 
 (defn render
-  [steps]
-  (into [:ul#timeline] (map #(vector :li.timeline-event (event %)) (reverse steps))))
+  [steps current-state]
+  [:div
+    (into [:ul#timeline] (map #(vector :li.timeline-event (event %)) steps))
+    [cursor/render current-state]])
