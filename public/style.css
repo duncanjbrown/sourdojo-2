@@ -107,13 +107,17 @@ select {
     margin-bottom: 0.4rem;
 }
 
+#cursor {
+    background-color: white;
+}
+
 .actions {
     display: flex;
     margin-left: -0.5rem;
 }
 
 .actions--button {
-    background: 0;
+    background-color: white;
     padding: 0.5rem;
     border-radius: 5px;
     margin-bottom: 0.5rem;

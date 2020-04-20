@@ -15,7 +15,7 @@
 
 (defn translate
   [sym]
-  (sym {:start "Started baking!"
+  (sym {:start "START"
         :new "Ready to bake"
         :begin-bake "🥣Mix"
         :mix "Mix"

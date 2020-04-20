@@ -5,8 +5,8 @@
             [sourdojo.components.add-photo :as add-photo]))
 
 (defn- starting-cursor []
-  [:h1
-   [:a {:href "#" :on-click #(rf/dispatch [:transition! :new {:type :step :step :start :time (js/Date.)}])} "start!"]])
+  [:div
+   [step-buttons/render @(rf/subscribe [:current-state])]])
 
 (defn- in-progress-cursor []
   [:div
@@ -15,7 +15,7 @@
     [add-photo/render]])
 
 (defn render [current-state]
-  [:div.cursor
+  [:li#cursor
    (if (= :origin current-state)
      (starting-cursor)
      (in-progress-cursor))])
