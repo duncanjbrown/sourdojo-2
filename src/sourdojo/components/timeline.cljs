@@ -31,6 +31,9 @@
 
 (defn render
   [steps current-state]
-  [(reagent/adapt-react-class flip-move) {:duration 750 :easing "ease-out"}
-    (let [step-blocks (map #(vector :li.timeline-event (event %)) steps)]
-      (into [:ul#timeline] (into step-blocks (vector [cursor/render current-state]))))])
+  [:ul#timeline
+    [(reagent/adapt-react-class flip-move) {:enterAnimation "fade"
+                                            :leaveAnimation "fade"}
+      (for [s steps]
+        ^{:key (:time s)} [:li.timeline-event (event s)])
+      ^{:key "cursor"} [cursor/render current-state]]])
