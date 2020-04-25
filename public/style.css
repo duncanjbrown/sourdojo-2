@@ -35,6 +35,9 @@ body {
   scroll-behavior: smooth;
   text-rendering: optimizeSpeed;
   line-height: 1.5;
+  font-size: 20px;
+  max-width: 720px;
+  margin: 0 auto;
 }
 
 /* Remove list styles on ul, ol elements with a class attribute */
@@ -95,10 +98,64 @@ select {
 #timeline {
     list-style-type: none;
     padding-left: 0;
+    position: relative;
 }
 
 #timeline .timeline-event {
-    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+#timeline .timeline-event .timeline-event--title{
+    font-size: 2rem;
+}
+
+#timeline .timeline-event {
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+#timeline .timeline-event .timeline-event--content{
+    padding: 1rem;
+}
+
+#timeline .timeline-event .timeline-event--content:before{
+    background-color: #1d70b8;
+    content: "";
+    height: 5px;
+    left: 0px;
+    top: 1.5rem;
+    position: absolute;
+    width: 15px;
+}
+
+#timeline .timeline-event:first-child:before {
+    background-color: #1d70b8;
+    content: "";
+    height: 100%;
+    left: 0;
+    top: 1.5rem;
+    position: absolute;
+    width: 5px;
+}
+
+#timeline .timeline-event:before {
+    background-color: #1d70b8;
+    content: "";
+    height: 100%;
+    left: 0;
+    position: absolute;
+    width: 5px;
+}
+
+#timeline .timeline-event:last-child:after {
+    background-color: #1d70b8;
+    content: "";
+    height: 5px;
+    left: -5px;
+    position: absolute;
+    bottom: -10px;
+    width: 15px;
 }
 
 .timeline-event--date {
@@ -109,6 +166,8 @@ select {
 
 #cursor {
     background-color: white;
+    position: relative;
+    top: 0.5rem;
 }
 
 .actions {
@@ -119,7 +178,6 @@ select {
 .actions--button {
     background-color: white;
     padding: 0.5rem;
-    border-radius: 5px;
     margin-bottom: 0.5rem;
     margin-left: 0.5rem;
     border-color: #999;
@@ -133,7 +191,6 @@ select {
 }
 
 .add-note--textarea {
-    border-radius: 5px;
     margin-bottom: 0.5rem;
     width: 300px;
     height: 100px;
@@ -149,7 +206,6 @@ select {
 .add-note--button {
     font-size: 1rem;
     padding: 0.5rem;
-    border-radius: 5px;
     margin-left: 0.5rem;
     height: 100px;
     background: 0;
@@ -164,7 +220,6 @@ select {
 .add-photo--button {
     display: block;
     padding: 0.5rem;
-    border-radius: 5px;
     border: 1px solid #ccc;
     text-align: center;
 }

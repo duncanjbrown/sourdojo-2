@@ -17,7 +17,7 @@
   [sym]
   (sym {:start "START"
         :new "Ready to bake"
-        :begin-bake "🥣Mix"
+        :begin-bake "🥣 Mix"
         :mix "Mix"
         :stretch-and-fold "💪 Stretch and fold"
         :begin-autolyse "🕐 Begin autolyse"

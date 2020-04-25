@@ -17,17 +17,20 @@
   [event]
   (case (:type event)
     :note
-    [:div
+    [:li.timeline-event
+     [:div.timeline-event--content
       [:p.timeline-event--date (format-date (:time event))]
-      [:p.timeline-event--content (:note event)]]
+      [:p.timeline-event--note (:note event)]]]
     :photo
-    [:div
+    [:li.timeline-event
+     [:div.timeline-event--content
       [:p.timeline-event--date (format-date (:time event))]
-      [:img.timeline-event--image {:src (:url event)}]]
+      [:img.timeline-event--image {:src (:url event)}]]]
     :step
-    [:div
+    [:li.timeline-event
+     [:div.timeline-event--content
       [:p.timeline-event--date (format-date (:time event))]
-      [:h4.timeline-event--title (bake-states/translate (:step event))]]))
+      [:h4.timeline-event--title (bake-states/translate (:step event))]]]))
 
 (defn render
   [steps current-state]
@@ -35,5 +38,5 @@
     [(reagent/adapt-react-class flip-move) {:enterAnimation "fade"
                                             :leaveAnimation "fade"}
       (for [s steps]
-        ^{:key (:time s)} [:li.timeline-event (event s)])
+        ^{:key (:time s)} (event s))
       ^{:key "cursor"} [cursor/render current-state]]])
