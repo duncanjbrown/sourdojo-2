@@ -20,5 +20,6 @@
 (defn main []
   (firebase/init! (:firebase env/config))
   (firebase-auth/init!)
+  (rf/dispatch-sync [:initialise-db])
   (rf/dispatch-sync [:initialise-bake])
   (start!))

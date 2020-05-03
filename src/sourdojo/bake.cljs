@@ -1,5 +1,6 @@
 (ns sourdojo.bake)
 
 (def new-bake
-  {:state :origin
+  {:id    nil
+   :state :origin
    :steps []})

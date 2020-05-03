@@ -13,6 +13,11 @@
         formatter (timeformat/formatter "h:mma, d MMMM Y")]
     (timeformat/unparse formatter datetime)))
 
+(defn- photo-src
+  [{:keys [filename]}]
+  (let [cache @(rf/subscribe [:cache])]
+    (get cache filename)))
+
 (defn- event
   [event]
   (case (:type event)
@@ -25,7 +30,7 @@
     [:li.timeline-event
      [:div.timeline-event--content
       [:p.timeline-event--date (format-date (:time event))]
-      [:img.timeline-event--image {:src (:url event)}]]]
+      [:img.timeline-event--image {:src (photo-src event)}]]]
     :step
     [:li.timeline-event
      [:div.timeline-event--content

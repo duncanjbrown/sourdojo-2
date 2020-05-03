@@ -2,4 +2,5 @@
 
 (def initial-db
   {:current-bake nil
-   :user nil})
+   :user nil
+   :cache {}})

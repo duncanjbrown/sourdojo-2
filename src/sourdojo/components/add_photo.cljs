@@ -3,17 +3,20 @@
             [reagent.core :as reagent]))
 
 (defn- create-photo-event
-  [photo-url]
-  {:type :photo :url photo-url :time (js/Date.)})
+  [filename]
+  {:type :photo :filename filename :time (js/Date.)})
 
 (defn- handle-photo-capture
-  [event]
+  [event filename-generator]
   (let [jsfile (-> event .-target .-files (aget 0))
-        url (js/URL.createObjectURL jsfile)]
-    (rf/dispatch [:add-photo (create-photo-event url)])))
+        mime-type (.-type jsfile)
+        extension "png" ;; TODO make this work
+        filename-with-extension (str "images/" (clojure.string/join "." [(filename-generator) extension]))]
+    (rf/dispatch [:save-photo {:filename filename-with-extension :file jsfile}])
+    (rf/dispatch [:add-photo (create-photo-event filename-with-extension)])))
 
 (defn render
-  []
+  [filename-generator]
   (let [photo-data (reagent/atom "")]
     (fn []
       [:form.add-photo
@@ -22,4 +25,4 @@
                                   :type :file
                                   :accept "image/*"
                                   :capture true
-                                  :on-change handle-photo-capture}]])))
+                                  :on-change #(handle-photo-capture % filename-generator)}]])))

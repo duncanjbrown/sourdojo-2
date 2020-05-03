@@ -12,6 +12,12 @@
    (:current-bake db)))
 
 (reg-sub
+ :current-bake-id
+ :<- [:current-bake]
+ (fn [current-bake _]
+   (:id current-bake)))
+
+(reg-sub
  :current-state
  :<- [:current-bake]
  (fn [current-bake _]
@@ -22,3 +28,8 @@
  :<- [:current-bake]
  (fn [current-bake _]
    (:steps current-bake)))
+
+(reg-sub
+  :cache
+  (fn [db _]
+    (:cache db)))

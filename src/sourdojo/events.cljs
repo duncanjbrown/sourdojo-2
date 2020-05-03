@@ -2,24 +2,33 @@
   (:require
    [sourdojo.db :as db :refer [initial-db]]
    [sourdojo.firebase.firestore :as firestore]
+   [sourdojo.firebase.storage :as firebase-storage]
    [sourdojo.bake :as bake]
    [sourdojo.bake-state-machine :as bake-states]
-   [re-frame.core :refer [reg-event-db reg-event-fx]]))
+   [re-frame.core :refer [reg-event-db reg-event-fx reg-fx]]))
 
 (def save-bake
   (re-frame.core/->interceptor
    :id      :save-bake
    :after   (fn [context]
               (let [new-bake-value (get-in context [:effects :db :current-bake])]
-                (assoc-in context [:effects :dispatch] [:save-current-bake-to-firestore new-bake-value])))))
+                (assoc-in context [:effects :save-current-bake-to-firestore] new-bake-value)))))
 
-(reg-event-fx
+(reg-fx
+ :upload-to-firestore-storage
+ (fn [{:keys [filename file]}]
+   (firebase-storage/save-image filename file)))
+
+(reg-event-db
+  :cache-photo
+  (fn [db [_ {:keys [filename file]}]]))
+
+(reg-fx
  :save-current-bake-to-firestore
- (fn [ctx [_ bake]]
+ (fn [bake]
     (if-let [id (:id bake)]
         (firestore/set-doc (str "bakes/" id) bake :current-bake)
-        (firestore/add-doc "bakes" bake :current-bake))
-   {}))
+        (firestore/add-doc "bakes" bake :current-bake))))
 
 (reg-event-fx
  :firestore-ok
@@ -63,6 +72,12 @@
  [save-bake]
  (fn [{:keys [db]} [_ note]]
    {:db (update-in db [:current-bake :steps] conj note)}))
+
+(reg-event-fx
+  :save-photo
+  (fn [{:keys [db]} [_ {:keys [file filename] :as file-map}]]
+    {:upload-to-firestore-storage file-map
+     :db (assoc-in db [:cache filename] (js/URL.createObjectURL file))}))
 
 (reg-event-fx
  :add-photo
