@@ -1,5 +1,5 @@
 (ns sourdojo.subs
-  (:require [re-frame.core :refer [reg-sub subscribe]]))
+  (:require [re-frame.core :refer [reg-sub]]))
 
 (reg-sub
  :user

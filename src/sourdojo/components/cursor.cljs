@@ -1,6 +1,7 @@
 (ns sourdojo.components.cursor
   (:require [re-frame.core :as rf]
             [goog.string]
+            [clojure.string]
             [sourdojo.components.step-buttons :as step-buttons]
             [sourdojo.components.add-note :as add-note]
             [sourdojo.components.add-photo :as add-photo]))

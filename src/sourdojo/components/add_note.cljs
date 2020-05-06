@@ -8,13 +8,13 @@
   {:type :note :note note-contents :time (js/Date.)})
 
 (defn render
-  [event-list]
+  []
   (let [note-contents (reagent/atom "")]
     (fn []
-      [:form.add-note {:on-submit #(do (.preventDefault %)
-                                       (when-not (string/blank? @note-contents)
-                                         (rf/dispatch [:add-note (create-note-event @note-contents)])
-                                         (reset! note-contents "")))}
+      [:form.add-note {:on-submit #((.preventDefault %)
+                                    (when-not (string/blank? @note-contents)
+                                      (rf/dispatch [:add-note (create-note-event @note-contents)])
+                                      (reset! note-contents "")))}
        [:textarea.add-note--textarea {:name "note"
                                       :value @note-contents
                                       :on-change #(reset! note-contents (-> % .-target .-value))}]

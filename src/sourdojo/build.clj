@@ -1,6 +1,5 @@
 (ns sourdojo.build
   (:require [aero.core :as aero]
-            [clojure.java.io :as io]
             [sourdojo.env :as env]
             [shadow.cljs.devtools.config :as shadow-config]
             [shadow.cljs.devtools.api :as shadow]))

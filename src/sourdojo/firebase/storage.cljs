@@ -1,6 +1,5 @@
 (ns sourdojo.firebase.storage
-  (:require [firebase.storage]
-            [re-frame.core :as rf]))
+  (:require [firebase.storage]))
 
 (defn- storage-root
   []

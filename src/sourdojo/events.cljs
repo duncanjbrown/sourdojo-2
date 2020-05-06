@@ -4,8 +4,7 @@
    [sourdojo.firebase.firestore :as firestore]
    [sourdojo.firebase.storage :as firebase-storage]
    [sourdojo.bake :as bake]
-   [sourdojo.bake-state-machine :as bake-states]
-   [re-frame.core :refer [reg-event-db reg-event-fx reg-fx]]))
+   [re-frame.core :refer [reg-event-fx reg-fx]]))
 
 (def save-bake
   (re-frame.core/->interceptor
@@ -19,10 +18,6 @@
  (fn [{:keys [filename file]}]
    (firebase-storage/save-image filename file)))
 
-(reg-event-db
-  :cache-photo
-  (fn [db [_ {:keys [filename file]}]]))
-
 (reg-fx
  :save-current-bake-to-firestore
  (fn [bake]
@@ -34,7 +29,7 @@
  :firestore-ok
  (fn [{:keys [db]} [_ action path-or-id hook]]
    (println (str action " " path-or-id " " hook))
-   (if (and (= action :add) (= hook :current-bake))
+   (when (and (= action :add) (= hook :current-bake))
      {:db (assoc-in db [:current-bake :id] path-or-id)})))
 
 (reg-event-fx
@@ -49,7 +44,7 @@
 
 (reg-event-fx
  :initialise-db
- (fn [{:keys [db]} _]
+ (fn [_ _]
    {:db initial-db}))
 
 (reg-event-fx
