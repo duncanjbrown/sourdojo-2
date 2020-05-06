@@ -8,11 +8,12 @@
                    :preloads [day8.re-frame-10x.preload]}
          :target :browser
          :closure-defines {"re_frame.trace.trace_enabled_QMARK_" true}
-         :compiler-options {
-           :external-config {
-             :devtools/config {
-                :features-to-install [:formatters :hints]}}}
+         :compiler-options {:external-config {:devtools/config {:features-to-install [:formatters :hints]}}}
          :build-hooks [(sourdojo.build/load-env)]}
+  :test {:target :browser-test
+                 :test-dir  "public/js/test"
+                 :devtools  {:http-port          8021
+                             :http-root          "public/js/test"}}
   :dist {:asset-path "/js"
          :modules {:main {:init-fn sourdojo.core/main}}
          :output-dir "dist/js"
