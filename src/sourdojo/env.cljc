@@ -9,7 +9,7 @@
      :clj  {}))
 
 #?(:clj
-    (defmacro ^:private get-config-map
-       "Returns config map at compile time"
-       []
-       config))
+   (defmacro ^:private get-config-map
+     "Returns config map at compile time"
+     []
+     config))

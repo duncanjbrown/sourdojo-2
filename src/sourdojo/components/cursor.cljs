@@ -16,9 +16,9 @@
 
 (defn- in-progress-cursor []
   [:div
-    [step-buttons/render @(rf/subscribe [:current-state])]
-    [add-note/render]
-    [add-photo/render unique-photo-filename]])
+   [step-buttons/render @(rf/subscribe [:current-state])]
+   [add-note/render]
+   [add-photo/render unique-photo-filename]])
 
 (defn render [current-state]
   [:li#cursor

@@ -21,9 +21,9 @@
 (reg-fx
  :save-current-bake-to-firestore
  (fn [bake]
-    (if-let [id (:id bake)]
-        (firestore/set-doc (str "bakes/" id) bake :current-bake)
-        (firestore/add-doc "bakes" bake :current-bake))))
+   (if-let [id (:id bake)]
+     (firestore/set-doc (str "bakes/" id) bake :current-bake)
+     (firestore/add-doc "bakes" bake :current-bake))))
 
 (reg-event-fx
  :firestore-ok
@@ -33,14 +33,14 @@
      {:db (assoc-in db [:current-bake :id] path-or-id)})))
 
 (reg-event-fx
-  :signed-in
-  (fn [{:keys [db]} [_ user]]
-    {:db (assoc db :user user)}))
+ :signed-in
+ (fn [{:keys [db]} [_ user]]
+   {:db (assoc db :user user)}))
 
 (reg-event-fx
-  :signed-out
-  (fn [{:keys [db]} _]
-    {:db (assoc db :user false)}))
+ :signed-out
+ (fn [{:keys [db]} _]
+   {:db (assoc db :user false)}))
 
 (reg-event-fx
  :initialise-db
@@ -69,10 +69,10 @@
    {:db (update-in db [:current-bake :steps] conj note)}))
 
 (reg-event-fx
-  :save-photo
-  (fn [{:keys [db]} [_ {:keys [file filename] :as file-map}]]
-    {:upload-to-firestore-storage file-map
-     :db (assoc-in db [:cache filename] (js/URL.createObjectURL file))}))
+ :save-photo
+ (fn [{:keys [db]} [_ {:keys [file filename] :as file-map}]]
+   {:upload-to-firestore-storage file-map
+    :db (assoc-in db [:cache filename] (js/URL.createObjectURL file))}))
 
 (reg-event-fx
  :add-photo

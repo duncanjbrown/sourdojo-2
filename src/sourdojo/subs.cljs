@@ -30,6 +30,6 @@
    (:steps current-bake)))
 
 (reg-sub
-  :cache
-  (fn [db _]
-    (:cache db)))
+ :cache
+ (fn [db _]
+   (:cache db)))

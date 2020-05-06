@@ -11,8 +11,8 @@
 
 (defn app []
   [:div
-    [header/render]
-    [timeline/render @(rf/subscribe [:steps]) @(rf/subscribe [:current-state])]])
+   [header/render]
+   [timeline/render @(rf/subscribe [:steps]) @(rf/subscribe [:current-state])]])
 
 (defn start! []
   (r/render [app] (. js/document getElementById "app")))

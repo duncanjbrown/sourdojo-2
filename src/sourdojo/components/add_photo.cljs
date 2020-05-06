@@ -19,9 +19,9 @@
   [filename-generator]
   (fn []
     [:form.add-photo
-      [:label.add-photo--button {:for "photo"} "Take photo"]
-      [:input.add-photo--input {:id "photo"
-                                :type :file
-                                :accept "image/*"
-                                :capture true
-                                :on-change #(handle-photo-capture % filename-generator)}]]))
+     [:label.add-photo--button {:for "photo"} "Take photo"]
+     [:input.add-photo--input {:id "photo"
+                               :type :file
+                               :accept "image/*"
+                               :capture true
+                               :on-change #(handle-photo-capture % filename-generator)}]]))

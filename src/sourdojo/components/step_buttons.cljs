@@ -9,7 +9,7 @@
 (defn- handle-transition
   [current-state transition]
   (let
-    [new-state (get-in bake-states/states [current-state transition])]
+   [new-state (get-in bake-states/states [current-state transition])]
     (rf/dispatch [:transition! new-state (create-step-event transition)])))
 
 (defn- transition-button
@@ -17,7 +17,7 @@
   [:button {:class "actions--button"
             :type "button"
             :on-click #(handle-transition current-state transition)}
-    (bake-states/translate transition)])
+   (bake-states/translate transition)])
 
 (defn render
   [state]
