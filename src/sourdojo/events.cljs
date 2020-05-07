@@ -4,33 +4,37 @@
    [sourdojo.firebase.firestore :as firestore]
    [sourdojo.firebase.storage :as firebase-storage]
    [sourdojo.bake :as bake]
-   [re-frame.core :refer [reg-event-fx reg-fx]]))
+   [sourdojo.bake-state-machine :as bake-states]
+   [re-frame.core :refer [reg-event-fx reg-fx inject-cofx reg-cofx]]))
 
-(def save-bake
-  (re-frame.core/->interceptor
-   :id      :save-bake
-   :after   (fn [context]
-              (let [new-bake-value (get-in context [:effects :db :current-bake])]
-                (assoc-in context [:effects :save-current-bake-to-firestore] new-bake-value)))))
+;; (def save-bake
+;;   (re-frame.core/->interceptor
+;;    :id      :save-bake
+;;    :after   (fn [context]
+;;               (let [new-bake-value (get-in context [:effects :db :current-bake])]
+;;                 (assoc-in context [:effects :save-current-bake-to-firestore] new-bake-value)))))
 
 (reg-fx
  :upload-to-firestore-storage
  (fn [{:keys [filename file]}]
    (firebase-storage/save-image filename file)))
+;;
+;; (reg-fx
+;;  :save-current-bake-to-firestore
+;;  (fn [bake]
+;;    (if-let [id (:id bake)]
+;;      (firestore/set-doc (str "bakes/" id) bake :current-bake)
+;;      (firestore/add-doc "bakes" bake :current-bake))))
 
-(reg-fx
- :save-current-bake-to-firestore
- (fn [bake]
-   (if-let [id (:id bake)]
-     (firestore/set-doc (str "bakes/" id) bake :current-bake)
-     (firestore/add-doc "bakes" bake :current-bake))))
+(defn firestore-ok
+  [{:keys [db]} [_ action path-or-id hook]]
+  (println (str action " " path-or-id " " hook))
+  (when (and (= action :add) (= hook :current-bake))
+    {:db (assoc-in db [:current-bake :id] path-or-id)}))
 
 (reg-event-fx
  :firestore-ok
- (fn [{:keys [db]} [_ action path-or-id hook]]
-   (println (str action " " path-or-id " " hook))
-   (when (and (= action :add) (= hook :current-bake))
-     {:db (assoc-in db [:current-bake :id] path-or-id)})))
+ firestore-ok)
 
 (reg-event-fx
  :signed-in
@@ -49,24 +53,32 @@
 
 (reg-event-fx
  :initialise-bake
- [save-bake]
  (fn [{:keys [db]} _]
    {:db (assoc db :current-bake bake/new-bake)}))
 
+(reg-cofx
+ :now
+ (fn [cofx _]
+   (assoc cofx :now (js/Date.))))
+
 (reg-event-fx
  :transition!
- [save-bake]
- (fn [{:keys [db]} [_ new-state step]]
-   {:db (->
-         db
-         (assoc-in [:current-bake :state] new-state)
-         (update-in [:current-bake :steps] conj step))}))
+ [(inject-cofx :now)]
+ (fn [{:keys [db now]} [_ transition]]
+   (let [current-state (get-in db [:current-bake :state])
+         new-state (get-in bake-states/states [current-state transition])
+         step {:type :step :step transition :time now}]
+     {:db (->
+            db
+            (assoc-in [:current-bake :state] new-state)
+            (update-in [:current-bake :steps] conj step))})))
 
 (reg-event-fx
  :add-note
- [save-bake]
- (fn [{:keys [db]} [_ note]]
-   {:db (update-in db [:current-bake :steps] conj note)}))
+ [(inject-cofx :now)]
+ (fn [{:keys [db now]} [_ contents]]
+   (let [note {:type :note :note contents :time now}]
+    {:db (update-in db [:current-bake :steps] conj note)})))
 
 (reg-event-fx
  :save-photo
@@ -76,6 +88,5 @@
 
 (reg-event-fx
  :add-photo
- [save-bake]
  (fn [{:keys [db]} [_ photo]]
    {:db (update-in db [:current-bake :steps] conj photo)}))

@@ -3,17 +3,14 @@
             [clojure.string :as string]
             [reagent.core :as reagent]))
 
-(defn- create-note-event
-  [note-contents]
-  {:type :note :note note-contents :time (js/Date.)})
-
 (defn render
   []
   (let [note-contents (reagent/atom "")]
     (fn []
-      [:form.add-note {:on-submit #((.preventDefault %)
+      [:form.add-note {:on-submit (fn [e]
+                                    (.preventDefault e)
                                     (when-not (string/blank? @note-contents)
-                                      (rf/dispatch [:add-note (create-note-event @note-contents)])
+                                      (rf/dispatch [:add-note @note-contents])
                                       (reset! note-contents "")))}
        [:textarea.add-note--textarea {:name "note"
                                       :value @note-contents
