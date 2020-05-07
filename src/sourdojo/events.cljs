@@ -6,6 +6,7 @@
    [sourdojo.bake :as bake]
    [sourdojo.bake-state-machine :as bake-states]
    [re-frame.core :refer [reg-event-fx reg-fx inject-cofx reg-cofx]]
+   [medley.core :refer [update-existing]]
    [clojure.string]))
 
 (def save-bake
@@ -15,7 +16,7 @@
               (let [bake (get-in context [:effects :db :current-bake])]
                 (if-let [id (:id bake)]
                   (firestore/set-doc (str "bakes/" id) bake :current-bake)
-                  (firestore/add-doc "bakes" bake :current-bake))
+                  (firestore/add-doc "bakes" bake :create-bake))
                 context))))
 
 (reg-fx
@@ -23,20 +24,61 @@
  (fn [{:keys [filename file]}]
    (firebase-storage/save-image filename file)))
 
+(reg-fx
+ :firestore-load
+ (fn [[path hook]]
+  (firestore/get-doc path hook)))
+
+(defn firestore-bake->local-bake
+  [firestore-bake]
+  (let [steps
+        (map (fn [step]
+               (-> step
+                (update :time #(.toDate %))
+                (update :type keyword)
+                (update-existing :step keyword)))
+             (:steps firestore-bake))]
+    (-> firestore-bake
+      (assoc :steps (vec steps))
+      (update :state keyword))))
+
+(reg-event-fx
+ :firestore-get-ok
+ (fn [{:keys [db]} [_ result hook]]
+  (cond
+   (= hook :load-user)
+   (if-let [bake-in-progress (:current-bake result)]
+    {:firestore-load [(str "bakes/" bake-in-progress) :load-bake-in-progress]})
+   (= hook :load-bake-in-progress)
+   {:db (assoc db :current-bake (firestore-bake->local-bake result))})))
+
 (defn firestore-ok
-  [{:keys [db]} [_ action path-or-id hook]]
+  [_ [_ action path-or-id hook]]
   (println (str "Firebase saved OK: " action " " path-or-id " " hook))
-  (when (and (= action :add) (= hook :current-bake))
-    {:db (assoc-in db [:current-bake :id] path-or-id)}))
+  (when (= hook :create-bake)
+    {:dispatch [:bake-created path-or-id]}))
 
 (reg-event-fx
  :firestore-ok
  firestore-ok)
 
 (reg-event-fx
+ :bake-created
+ (fn [{:keys [db]} [_ bake-id]]
+   (let [current-user-id (get-in db [:user :id])]
+    {:db (assoc-in db [:current-bake :id] bake-id)
+     :save-current-bake-on-user [bake-id current-user-id]})))
+
+(reg-fx
+ :save-current-bake-on-user
+ (fn [[bake-id current-user-id]]
+  (firestore/set-doc-with-merge (str "users/" current-user-id) {:current-bake bake-id})))
+
+(reg-event-fx
  :signed-in
  (fn [{:keys [db]} [_ user]]
-   {:db (assoc db :user user)}))
+  (firestore/get-doc (str "users/" (:id user)) :load-user)
+  {:db (assoc db :user user)}))
 
 (reg-event-fx
  :signed-out
