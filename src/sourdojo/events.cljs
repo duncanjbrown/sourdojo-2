@@ -8,28 +8,24 @@
    [re-frame.core :refer [reg-event-fx reg-fx inject-cofx reg-cofx]]
    [clojure.string]))
 
-;; (def save-bake
-;;   (re-frame.core/->interceptor
-;;    :id      :save-bake
-;;    :after   (fn [context]
-;;               (let [new-bake-value (get-in context [:effects :db :current-bake])]
-;;                 (assoc-in context [:effects :save-current-bake-to-firestore] new-bake-value)))))
+(def save-bake
+  (re-frame.core/->interceptor
+   :id      :save-bake
+   :after   (fn [context]
+              (let [bake (get-in context [:effects :db :current-bake])]
+                (if-let [id (:id bake)]
+                  (firestore/set-doc (str "bakes/" id) bake :current-bake)
+                  (firestore/add-doc "bakes" bake :current-bake))
+                context))))
 
 (reg-fx
  :upload-to-firestore-storage
  (fn [{:keys [filename file]}]
    (firebase-storage/save-image filename file)))
-;;
-;; (reg-fx
-;;  :save-current-bake-to-firestore
-;;  (fn [bake]
-;;    (if-let [id (:id bake)]
-;;      (firestore/set-doc (str "bakes/" id) bake :current-bake)
-;;      (firestore/add-doc "bakes" bake :current-bake))))
 
 (defn firestore-ok
   [{:keys [db]} [_ action path-or-id hook]]
-  (println (str action " " path-or-id " " hook))
+  (println (str "Firebase saved OK: " action " " path-or-id " " hook))
   (when (and (= action :add) (= hook :current-bake))
     {:db (assoc-in db [:current-bake :id] path-or-id)}))
 
@@ -62,28 +58,31 @@
  (fn [cofx _]
    (assoc cofx :now (js/Date.))))
 
+(defn do-transition
+  [{:keys [db now]} [_ transition]]
+  (let [current-state (get-in db [:current-bake :state])
+        new-state (get-in bake-states/states [current-state transition])
+        step {:type :step :step transition :time now}]
+     {:db (->
+           db
+           (assoc-in [:current-bake :state] new-state)
+           (update-in [:current-bake :steps] conj step))}))
+
 (reg-event-fx
  :transition!
- [(inject-cofx :now)]
- (fn [{:keys [db now]} [_ transition]]
-   (let [current-state (get-in db [:current-bake :state])
-         new-state (get-in bake-states/states [current-state transition])
-         step {:type :step :step transition :time now}]
-     {:db (->
-            db
-            (assoc-in [:current-bake :state] new-state)
-            (update-in [:current-bake :steps] conj step))})))
+ [save-bake (inject-cofx :now)]
+ do-transition)
 
 (reg-event-fx
  :add-note
- [(inject-cofx :now)]
+ [save-bake (inject-cofx :now)]
  (fn [{:keys [db now]} [_ contents]]
    (let [note {:type :note :note contents :time now}]
     {:db (update-in db [:current-bake :steps] conj note)})))
 
 (reg-event-fx
  :add-photo
- [(inject-cofx :now)]
+ [save-bake (inject-cofx :now)]
  (fn [{:keys [db now]} [_ jsfile]]
    (let [current-bake-id (get-in db [:current-bake :id])
          base-filename (clojure.string/join "-"
