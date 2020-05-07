@@ -12,12 +12,6 @@
    (:current-bake db)))
 
 (reg-sub
- :current-bake-id
- :<- [:current-bake]
- (fn [current-bake _]
-   (:id current-bake)))
-
-(reg-sub
  :current-state
  :<- [:current-bake]
  (fn [current-bake _]

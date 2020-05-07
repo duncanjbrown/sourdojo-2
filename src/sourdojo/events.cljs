@@ -5,7 +5,8 @@
    [sourdojo.firebase.storage :as firebase-storage]
    [sourdojo.bake :as bake]
    [sourdojo.bake-state-machine :as bake-states]
-   [re-frame.core :refer [reg-event-fx reg-fx inject-cofx reg-cofx]]))
+   [re-frame.core :refer [reg-event-fx reg-fx inject-cofx reg-cofx]]
+   [clojure.string]))
 
 ;; (def save-bake
 ;;   (re-frame.core/->interceptor
@@ -81,12 +82,20 @@
     {:db (update-in db [:current-bake :steps] conj note)})))
 
 (reg-event-fx
- :save-photo
- (fn [{:keys [db]} [_ {:keys [file filename] :as file-map}]]
-   {:upload-to-firestore-storage file-map
-    :db (assoc-in db [:cache filename] (js/URL.createObjectURL file))}))
-
-(reg-event-fx
  :add-photo
- (fn [{:keys [db]} [_ photo]]
-   {:db (update-in db [:current-bake :steps] conj photo)}))
+ [(inject-cofx :now)]
+ (fn [{:keys [db now]} [_ jsfile]]
+   (let [current-bake-id (get-in db [:current-bake :id])
+         base-filename (clojure.string/join "-"
+                        [current-bake-id (goog.string/getRandomString)])
+         extension "png"
+         filename (str "images/"
+                       base-filename
+                       "."
+                       extension)
+         object-url (js/URL.createObjectURL jsfile)
+         photo-event {:type :photo :filename filename :time now}]
+     {:db (-> db
+              (update-in [:current-bake :steps] conj photo-event)
+              (assoc-in [:cache filename] object-url))
+      :upload-to-firestore-storage {:file jsfile :filename filename}})))
