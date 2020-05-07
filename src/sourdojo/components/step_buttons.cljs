@@ -11,6 +11,5 @@
 
 (defn render
   [state]
-  (println state)
   (when-let [available-actions (bake-states/transitions-from state)]
     (into [:div.actions] (map #(transition-button %) available-actions))))
