@@ -7,7 +7,8 @@
             [sourdojo.events]
             [sourdojo.env :as env]
             [sourdojo.components.header :as header]
-            [sourdojo.components.timeline :as timeline]))
+            [sourdojo.components.timeline :as timeline]
+            [sourdojo.components.bake-list :as bake-list]))
 
 (defn app []
   [:div
@@ -17,7 +18,8 @@
     [:button {:class "actions--button"
               :type "button"
               :on-click #(rf/dispatch [:initialise-bake])}
-     "Start!"])])
+     "Start!"])
+   [bake-list/render @(rf/subscribe [:past-bakes])]])
 
 (defn start! []
   (r/render [app] (. js/document getElementById "app")))

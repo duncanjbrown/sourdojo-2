@@ -3,4 +3,5 @@
 (def initial-db
   {:current-bake nil
    :user nil
-   :photo-urls {}})
+   :photo-urls {}
+   :past-bakes []})

@@ -27,3 +27,8 @@
  :photo-urls
  (fn [db _]
    (:photo-urls db)))
+
+(reg-sub
+ :past-bakes
+ (fn [db _]
+   (:past-bakes db)))

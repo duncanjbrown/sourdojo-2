@@ -57,9 +57,26 @@
 
 (reg-event-fx
  :load-user
- (fn [_ [_ firestore-user]]
-   (if-let [bake-in-progress (:current-bake firestore-user)]
-    {:firestore-load [(str "bakes/" bake-in-progress) :load-bake-in-progress]})))
+ (fn [{:keys [db]} [_ firestore-user]]
+   (let [user-id (get-in db [:user :id])]
+    (if-let [bake-in-progress (:current-bake firestore-user)]
+      {:firestore-load [(str "bakes/" bake-in-progress) :load-bake-in-progress]}
+      {:firestore-load-past-bakes user-id}))))
+
+(reg-fx
+ :firestore-load-past-bakes
+ (fn [user-id]
+   (firestore/query "bakes" ["user-id" "==" user-id] :load-past-bakes)))
+
+(defn firestore-bake->past-bake
+  [firestore-bake]
+  (println (keys firestore-bake))
+  {:id (:id firestore-bake)})
+
+(reg-event-fx
+ :load-past-bakes
+ (fn [{:keys [db]} [_ results]]
+   {:db (assoc db :past-bakes (map firestore-bake->past-bake results))}))
 
 (reg-event-fx
  :firestore-ok
@@ -69,6 +86,7 @@
 
 (reg-event-fx
  :bake-created-in-firestore
+ [save-bake] ;; push the ID back up to Firestore :/
  (fn [{:keys [db]} [_ bake-id]]
    (let [current-user-id (get-in db [:user :id])]
     {:db (assoc-in db [:current-bake :id] bake-id)
@@ -152,4 +170,5 @@
  (fn [{:keys [db]} [_]]
    (let [current-user-id (get-in db [:user :id])]
     {:db (assoc db :current-bake nil)
-     :save-current-bake-on-user [nil current-user-id]})))
+     :save-current-bake-on-user [nil current-user-id]
+     :firestore-load-past-bakes current-user-id})))
