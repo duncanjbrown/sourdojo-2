@@ -15,8 +15,8 @@
 
 (defn- photo-src
   [{:keys [filename]}]
-  (let [cache @(rf/subscribe [:cache])]
-    (get cache filename)))
+  (let [urls @(rf/subscribe [:photo-urls])]
+    (get urls filename)))
 
 (defn- event
   [event]

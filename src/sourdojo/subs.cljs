@@ -24,6 +24,6 @@
    (:steps current-bake)))
 
 (reg-sub
- :cache
+ :photo-urls
  (fn [db _]
-   (:cache db)))
+   (:photo-urls db)))

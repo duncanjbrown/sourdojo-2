@@ -48,7 +48,7 @@
 (reg-event-fx
  :load-image-url
  (fn [{:keys [db]} [_ filename url]]
-   {:db (assoc-in db [:cache filename] url)}))
+   {:db (assoc-in db [:photo-urls filename] url)}))
 
 (reg-event-fx
  :load-bake-in-progress
@@ -144,5 +144,5 @@
          photo-event {:type :photo :filename filename :time now}]
      {:db (-> db
               (update-in [:current-bake :steps] conj photo-event)
-              (assoc-in [:cache filename] object-url))
+              (assoc-in [:photo-urls filename] object-url))
       :upload-to-firestore-storage {:file jsfile :filename filename}})))
