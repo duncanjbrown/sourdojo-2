@@ -40,8 +40,9 @@
 (defn render
   [steps current-state]
   [:ul#timeline
-   [(reagent/adapt-react-class flip-move) {:enterAnimation "fade"
-                                           :leaveAnimation "fade"}
-    (for [s steps]
-      ^{:key (:time s)} (event s))
-    ^{:key "cursor"} [cursor/render current-state]]])
+   (into [(reagent/adapt-react-class flip-move) {:enterAnimation "fade"
+                                                 :leaveAnimation "fade"}]
+        (conj []
+              (doall (for [s steps]
+                      ^{:key (:time s)} (event s)))
+              ^{:key "cursor"} [cursor/render current-state]))])

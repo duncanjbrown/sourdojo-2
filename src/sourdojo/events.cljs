@@ -37,10 +37,18 @@
                 (update :time #(.toDate %))
                 (update :type keyword)
                 (update-existing :step keyword)))
-             (:steps firestore-bake))]
+             (:steps firestore-bake))
+        photos (:photo (group-by :type steps))]
+    (doall
+     (map #(firebase-storage/load-image-url % :load-image-url) (map :filename photos)))
     (-> firestore-bake
       (assoc :steps (vec steps))
       (update :state keyword))))
+
+(reg-event-fx
+ :load-image-url
+ (fn [{:keys [db]} [_ filename url]]
+   {:db (assoc-in db [:cache filename] url)}))
 
 (reg-event-fx
  :load-bake-in-progress
