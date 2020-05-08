@@ -15,8 +15,8 @@
    :after   (fn [context]
               (let [bake (get-in context [:effects :db :current-bake])]
                 (if-let [id (:id bake)]
-                  (firestore/set-doc (str "bakes/" id) bake :current-bake)
-                  (firestore/add-doc "bakes" bake :create-bake))
+                  (firestore/set-doc (str "bakes/" id) bake :bake-updated-in-firestore)
+                  (firestore/add-doc "bakes" bake :bake-created-in-firestore))
                 context))))
 
 (reg-fx
@@ -26,8 +26,8 @@
 
 (reg-fx
  :firestore-load
- (fn [[path hook]]
-  (firestore/get-doc path hook)))
+ (fn [[path callback-event]]
+  (firestore/get-doc path callback-event)))
 
 (defn firestore-bake->local-bake
   [firestore-bake]
@@ -43,27 +43,24 @@
       (update :state keyword))))
 
 (reg-event-fx
- :firestore-get-ok
- (fn [{:keys [db]} [_ result hook]]
-  (cond
-   (= hook :load-user)
-   (if-let [bake-in-progress (:current-bake result)]
-    {:firestore-load [(str "bakes/" bake-in-progress) :load-bake-in-progress]})
-   (= hook :load-bake-in-progress)
-   {:db (assoc db :current-bake (firestore-bake->local-bake result))})))
+ :load-bake-in-progress
+ (fn [{:keys [db]} [_ firestore-bake]]
+   {:db (assoc db :current-bake (firestore-bake->local-bake firestore-bake))}))
 
-(defn firestore-ok
-  [_ [_ action path-or-id hook]]
-  (println (str "Firebase saved OK: " action " " path-or-id " " hook))
-  (when (= hook :create-bake)
-    {:dispatch [:bake-created path-or-id]}))
+(reg-event-fx
+ :load-user
+ (fn [_ [_ firestore-user]]
+   (if-let [bake-in-progress (:current-bake firestore-user)]
+    {:firestore-load [(str "bakes/" bake-in-progress) :load-bake-in-progress]})))
 
 (reg-event-fx
  :firestore-ok
- firestore-ok)
+ (fn [_ [_ path]]
+   (println (str "Firestore updated: " path))
+   {}))
 
 (reg-event-fx
- :bake-created
+ :bake-created-in-firestore
  (fn [{:keys [db]} [_ bake-id]]
    (let [current-user-id (get-in db [:user :id])]
     {:db (assoc-in db [:current-bake :id] bake-id)
@@ -93,7 +90,8 @@
 (reg-event-fx
  :initialise-bake
  (fn [{:keys [db]} _]
-   {:db (assoc db :current-bake bake/new-bake)}))
+   (let [current-user-id (get-in db [:user :id])]
+    {:db (assoc db :current-bake (merge bake/new-bake {:user-id current-user-id}))})))
 
 (reg-cofx
  :now
