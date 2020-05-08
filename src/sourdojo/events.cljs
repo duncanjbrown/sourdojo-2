@@ -3,6 +3,7 @@
    [sourdojo.db :as db :refer [initial-db]]
    [sourdojo.firebase.firestore :as firestore]
    [sourdojo.firebase.storage :as firebase-storage]
+   [sourdojo.firebase.auth :as firebase-auth]
    [sourdojo.bake :as bake]
    [sourdojo.bake-state-machine :as bake-states]
    [re-frame.core :refer [reg-event-fx reg-fx inject-cofx reg-cofx]]
@@ -106,7 +107,11 @@
 (reg-event-fx
  :signed-out
  (fn [{:keys [db]} _]
-   {:db (assoc db :user false)}))
+   {:db initial-db}))
+
+(reg-event-fx
+ :user-linked-to-google
+ (println "Linked to Google!"))
 
 (reg-event-fx
  :initialise-db

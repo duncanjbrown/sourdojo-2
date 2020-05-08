@@ -1,5 +1,6 @@
 (ns sourdojo.firebase.auth
-  (:require [firebase.auth]
+  (:require ["firebase/auth"]
+            ["firebase/app" :as firebase]
             [re-frame.core :as rf]))
 
 (defn- firebase-user->user [firebase-user]
@@ -11,10 +12,26 @@
     (rf/dispatch [:signed-out])))
 
 (defn init! []
-  (.onAuthStateChanged (.auth js/firebase) auth-handler))
+  (.onAuthStateChanged (.auth firebase) auth-handler))
 
 (defn sign-in []
-  (.signInAnonymously (.auth js/firebase)))
+  (.signInAnonymously (.auth firebase)))
 
 (defn sign-out []
-  (.signOut (.auth js/firebase)))
+  (.signOut (.auth firebase)))
+
+(defn sign-in-with-google []
+  (let [provider (-> (new (.-GoogleAuthProvider (.-auth firebase)))
+                     (.addScope "email"))]
+    (-> (.auth firebase)
+        (.signInWithPopup provider))))
+
+(defn link-to-google
+  []
+  (let [provider (-> (new (.-GoogleAuthProvider (.-auth firebase)))
+                     (.addScope "email"))]
+      (-> (.auth firebase)
+          (.-currentUser)
+          (.linkWithPopup provider)
+          (.then #(rf/dispatch [:user-linked-to-google])))))
+
