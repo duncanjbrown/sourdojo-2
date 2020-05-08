@@ -1,8 +1,7 @@
 (ns sourdojo.bake-state-machine)
 
 (def states
-  {:origin {:start :new}
-   :new {:begin-bake :mix}
+  {:new {:begin-bake :mix}
    :mix {:begin-autolyse :autolysing
          :add-starter-begin-bulk :bulk-fermentation}
    :autolysing {:begin-bulk :bulk-fermentation}

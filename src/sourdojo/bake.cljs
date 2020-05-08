@@ -2,5 +2,5 @@
 
 (def new-bake
   {:id    nil
-   :state :origin
+   :state :new
    :steps []})

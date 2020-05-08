@@ -12,7 +12,12 @@
 (defn app []
   [:div
    [header/render]
-   [timeline/render @(rf/subscribe [:steps]) @(rf/subscribe [:current-state])]])
+   (if @(rf/subscribe [:current-bake])
+    [timeline/render @(rf/subscribe [:steps]) @(rf/subscribe [:current-state])]
+    [:button {:class "actions--button"
+              :type "button"
+              :on-click #(rf/dispatch [:initialise-bake])}
+     "Start!"])])
 
 (defn start! []
   (r/render [app] (. js/document getElementById "app")))
@@ -21,5 +26,4 @@
   (firebase/init! (:firebase env/config))
   (firebase-auth/init!)
   (rf/dispatch-sync [:initialise-db])
-  (rf/dispatch-sync [:initialise-bake])
   (start!))

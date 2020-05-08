@@ -146,3 +146,10 @@
               (update-in [:current-bake :steps] conj photo-event)
               (assoc-in [:photo-urls filename] object-url))
       :upload-to-firestore-storage {:file jsfile :filename filename}})))
+
+(reg-event-fx
+ :close-bake
+ (fn [{:keys [db]} [_]]
+   (let [current-user-id (get-in db [:user :id])]
+    {:db (assoc db :current-bake nil)
+     :save-current-bake-on-user [nil current-user-id]})))
