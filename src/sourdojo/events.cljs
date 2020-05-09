@@ -28,23 +28,23 @@
 (reg-fx
  :firestore-load
  (fn [[path callback-event]]
-  (firestore/get-doc path callback-event)))
+   (firestore/get-doc path callback-event)))
 
 (defn firestore-bake->local-bake
   [firestore-bake]
   (let [steps
         (map (fn [step]
                (-> step
-                (update :time #(.toDate %))
-                (update :type keyword)
-                (update-existing :step keyword)))
+                   (update :time #(.toDate %))
+                   (update :type keyword)
+                   (update-existing :step keyword)))
              (:steps firestore-bake))
         photos (:photo (group-by :type steps))]
     (doall
      (map #(firebase-storage/load-image-url % :load-image-url) (map :filename photos)))
     (-> firestore-bake
-      (assoc :steps (vec steps))
-      (update :state keyword))))
+        (assoc :steps (vec steps))
+        (update :state keyword))))
 
 (reg-event-fx
  :load-image-url
@@ -60,9 +60,9 @@
  :load-user
  (fn [{:keys [db]} [_ firestore-user]]
    (let [user-id (get-in db [:user :id])]
-    (if-let [bake-in-progress (:current-bake firestore-user)]
-      {:firestore-load [(str "bakes/" bake-in-progress) :load-bake-in-progress]}
-      {:firestore-load-past-bakes user-id}))))
+     (if-let [bake-in-progress (:current-bake firestore-user)]
+       {:firestore-load [(str "bakes/" bake-in-progress) :load-bake-in-progress]}
+       {:firestore-load-past-bakes user-id}))))
 
 (reg-fx
  :firestore-load-past-bakes
@@ -90,19 +90,19 @@
  [save-bake] ;; push the ID back up to Firestore :/
  (fn [{:keys [db]} [_ bake-id]]
    (let [current-user-id (get-in db [:user :id])]
-    {:db (assoc-in db [:current-bake :id] bake-id)
-     :save-current-bake-on-user [bake-id current-user-id]})))
+     {:db (assoc-in db [:current-bake :id] bake-id)
+      :save-current-bake-on-user [bake-id current-user-id]})))
 
 (reg-fx
  :save-current-bake-on-user
  (fn [[bake-id current-user-id]]
-  (firestore/set-doc-with-merge (str "users/" current-user-id) {:current-bake bake-id})))
+   (firestore/set-doc-with-merge (str "users/" current-user-id) {:current-bake bake-id})))
 
 (reg-event-fx
  :signed-in
  (fn [{:keys [db]} [_ user]]
-  (firestore/get-doc (str "users/" (:id user)) :load-user)
-  {:db (assoc db :user user)}))
+   (firestore/get-doc (str "users/" (:id user)) :load-user)
+   {:db (assoc db :user user)}))
 
 (reg-event-fx
  :signed-out
@@ -122,7 +122,7 @@
  :initialise-bake
  (fn [{:keys [db]} _]
    (let [current-user-id (get-in db [:user :id])]
-    {:db (assoc db :current-bake (merge bake/new-bake {:user-id current-user-id}))})))
+     {:db (assoc db :current-bake (merge bake/new-bake {:user-id current-user-id}))})))
 
 (reg-cofx
  :now
@@ -134,10 +134,10 @@
   (let [current-state (get-in db [:current-bake :state])
         new-state (get-in bake-states/states [current-state transition])
         step {:type :step :step transition :time now}]
-     {:db (->
-           db
-           (assoc-in [:current-bake :state] new-state)
-           (update-in [:current-bake :steps] conj step))}))
+    {:db (->
+          db
+          (assoc-in [:current-bake :state] new-state)
+          (update-in [:current-bake :steps] conj step))}))
 
 (reg-event-fx
  :transition!
@@ -149,7 +149,7 @@
  [save-bake (inject-cofx :now)]
  (fn [{:keys [db now]} [_ contents]]
    (let [note {:type :note :note contents :time now}]
-    {:db (update-in db [:current-bake :steps] conj note)})))
+     {:db (update-in db [:current-bake :steps] conj note)})))
 
 (reg-event-fx
  :add-photo
@@ -157,7 +157,7 @@
  (fn [{:keys [db now]} [_ jsfile]]
    (let [current-bake-id (get-in db [:current-bake :id])
          base-filename (clojure.string/join "-"
-                        [current-bake-id (goog.string/getRandomString)])
+                                            [current-bake-id (goog.string/getRandomString)])
          extension "png"
          filename (str "images/"
                        base-filename
@@ -174,6 +174,6 @@
  :close-bake
  (fn [{:keys [db]} [_]]
    (let [current-user-id (get-in db [:user :id])]
-    {:db (assoc db :current-bake nil)
-     :save-current-bake-on-user [nil current-user-id]
-     :firestore-load-past-bakes current-user-id})))
+     {:db (assoc db :current-bake nil)
+      :save-current-bake-on-user [nil current-user-id]
+      :firestore-load-past-bakes current-user-id})))

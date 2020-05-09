@@ -9,8 +9,8 @@
 
 (defn render [current-state]
   [:li#cursor
-    [:div
-      [step-buttons/render @(rf/subscribe [:current-state])]
-      [add-note/render]
-      [add-photo/render]
-      [close-bake/render]]])
+   [:div
+    [step-buttons/render @(rf/subscribe [:current-state])]
+    [add-note/render]
+    [add-photo/render]
+    [close-bake/render]]])

@@ -30,8 +30,8 @@
   []
   (let [provider (-> (new (.-GoogleAuthProvider (.-auth firebase)))
                      (.addScope "email"))]
-      (-> (.auth firebase)
-          (.-currentUser)
-          (.linkWithPopup provider)
-          (.then #(rf/dispatch [:user-linked-to-google])))))
+    (-> (.auth firebase)
+        (.-currentUser)
+        (.linkWithPopup provider)
+        (.then #(rf/dispatch [:user-linked-to-google])))))
 

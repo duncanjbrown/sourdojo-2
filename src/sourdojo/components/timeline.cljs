@@ -42,7 +42,7 @@
   [:ul#timeline
    (into [(reagent/adapt-react-class flip-move) {:enterAnimation "fade"
                                                  :leaveAnimation "fade"}]
-        (conj []
-              (doall (for [s steps]
-                      ^{:key (:time s)} (event s)))
-              ^{:key "cursor"} [cursor/render current-state]))])
+         (conj []
+               (doall (for [s steps]
+                        ^{:key (:time s)} (event s)))
+               ^{:key "cursor"} [cursor/render current-state]))])

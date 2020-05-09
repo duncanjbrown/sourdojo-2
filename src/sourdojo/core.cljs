@@ -14,11 +14,11 @@
   [:div
    [header/render]
    (if @(rf/subscribe [:current-bake])
-    [timeline/render @(rf/subscribe [:steps]) @(rf/subscribe [:current-state])]
-    [:button {:class "actions--button"
-              :type "button"
-              :on-click #(rf/dispatch [:initialise-bake])}
-     "Start!"])
+     [timeline/render @(rf/subscribe [:steps]) @(rf/subscribe [:current-state])]
+     [:button {:class "actions--button"
+               :type "button"
+               :on-click #(rf/dispatch [:initialise-bake])}
+      "Start!"])
    [bake-list/render @(rf/subscribe [:past-bakes])]])
 
 (defn start! []

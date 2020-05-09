@@ -11,4 +11,4 @@
   [:ul#past-bakes
    (into [(reagent/adapt-react-class flip-move) {:enterAnimation "fade"
                                                  :leaveAnimation "fade"}]
-        (doall (map bake bakes)))])
+         (doall (map bake bakes)))])

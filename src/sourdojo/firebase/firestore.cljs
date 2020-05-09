@@ -26,7 +26,7 @@
           #(rf/dispatch [callback-event (.-id %)]))))
 
 (defn get-doc
-    [path callback-event]
+  [path callback-event]
   (.then (.get (.doc (.firestore firebase) path))
          #(rf/dispatch [callback-event (js->clj (.data %) :keywordize-keys true)])))
 

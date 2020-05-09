@@ -23,25 +23,25 @@
                           (:output-name)
                           (str asset-path "/"))]
     (html5 {:lang "en"}
-      [:head
-        [:meta {:charset "UTF-8"}]
-        [:meta {:name "viewport", :content "width=device-width, initial-scale=1"}]
-        [:link {:rel "icon", :type "image/x-icon", :href "favicon.ico"}]
-        [:link {:rel "stylesheet", :href "/style.css", :type "text/css"}]
-        [:title "Sourdojo"]]
-      [:body
-        [:noscript "You need to enable JavaScript to run this app."]
-        [:div {:id "app"}]
-        [:script {:src main-js-path, :type "text/javascript"}]])))
+           [:head
+            [:meta {:charset "UTF-8"}]
+            [:meta {:name "viewport", :content "width=device-width, initial-scale=1"}]
+            [:link {:rel "icon", :type "image/x-icon", :href "favicon.ico"}]
+            [:link {:rel "stylesheet", :href "/style.css", :type "text/css"}]
+            [:title "Sourdojo"]]
+           [:body
+            [:noscript "You need to enable JavaScript to run this app."]
+            [:div {:id "app"}]
+            [:script {:src main-js-path, :type "text/javascript"}]])))
 
 (defn release
   ([] (release "local"))
   ([release-flag]
    (let [build-config (shadow-config/get-build! :dist)]
-    (shadow/release* (-> build-config
+     (shadow/release* (-> build-config
                          ;; note, we add ::release-flag to our build-config, we need this later.
-                         (assoc ::release-flag release-flag)) {})
-    (spit "dist/index.html" (index-html build-config)))))
+                          (assoc ::release-flag release-flag)) {})
+     (spit "dist/index.html" (index-html build-config)))))
 
 (defn watch
   "Watch the :app build, reloading on changes."
@@ -49,9 +49,9 @@
   ([] (watch "local"))
   ([release-flag]
    (let [build-config (shadow-config/get-build! :app)]
-    (spit "public/index.html" (index-html build-config))
-    (shadow/watch (-> build-config
-                      (assoc ::release-flag release-flag))))))
+     (spit "public/index.html" (index-html build-config))
+     (shadow/watch (-> build-config
+                       (assoc ::release-flag release-flag))))))
 
 ;;;;;;;;;;;;;;;;;;;
 ;; Reading environment variables
