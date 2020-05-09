@@ -4,7 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "shadow-cljs clj-run sourdojo.build/release local",
+    "watch": "shadow-cljs clj-run sourdojo.build/watch",
+    "deploy": "aws --profile sourdojo s3 sync ./dist s3://sourdojo",
+    "cljfmt": "clojure -Sdeps '{:deps {cljfmt {:mvn/version \"0.6.4\"}}}' -m cljfmt.main fix src/sourdojo"
   },
   "author": "",
   "license": "ISC",
