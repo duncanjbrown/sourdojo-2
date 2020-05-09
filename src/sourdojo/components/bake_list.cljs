@@ -1,7 +1,7 @@
 (ns sourdojo.components.bake-list
-  (:require [re-frame.core :as rf]
-            [reagent.core :as reagent]
+  (:require [reagent.core :as reagent]
             ["react-flip-move" :as flip-move]))
+
 (defn- bake
   [bake]
   [:li.past-bake (:id bake)])

@@ -11,3 +11,5 @@ Build for production: `npm run build`
 Deploy to S3: `npm run deploy`
 
 Apply standard formatting: `npm run cljfmt`
+
+Lint: `npm run lint`

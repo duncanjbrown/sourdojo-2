@@ -3,7 +3,6 @@
    [sourdojo.db :as db :refer [initial-db]]
    [sourdojo.firebase.firestore :as firestore]
    [sourdojo.firebase.storage :as firebase-storage]
-   [sourdojo.firebase.auth :as firebase-auth]
    [sourdojo.bake :as bake]
    [sourdojo.bake-state-machine :as bake-states]
    [re-frame.core :refer [reg-event-fx reg-fx inject-cofx reg-cofx]]
@@ -106,7 +105,7 @@
 
 (reg-event-fx
  :signed-out
- (fn [{:keys [db]} _]
+ (fn [_ _]
    {:db initial-db}))
 
 (reg-event-fx

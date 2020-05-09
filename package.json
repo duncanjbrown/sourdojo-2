@@ -8,7 +8,8 @@
     "build": "shadow-cljs clj-run sourdojo.build/release local",
     "watch": "shadow-cljs clj-run sourdojo.build/watch",
     "deploy": "aws --profile sourdojo s3 sync ./dist s3://sourdojo",
-    "cljfmt": "clojure -Sdeps '{:deps {cljfmt {:mvn/version \"0.6.4\"}}}' -m cljfmt.main fix src/sourdojo"
+    "cljfmt": "clojure -Sdeps '{:deps {cljfmt {:mvn/version \"0.6.4\"}}}' -m cljfmt.main fix src/sourdojo",
+    "lint": "clj-kondo --lint \"src\""
   },
   "author": "",
   "license": "ISC",
