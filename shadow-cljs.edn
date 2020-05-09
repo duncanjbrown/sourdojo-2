@@ -17,7 +17,8 @@
   :dist {:asset-path "/js"
          :modules {:main {:init-fn sourdojo.core/main}}
          :output-dir "dist/js"
-         :target :browser}}
+         :target :browser
+         :build-hooks [(sourdojo.build/load-env)]}}
  :dependencies [[re-frame "0.12.0"]
                 [refactor-nrepl "2.5.0"]
                 [binaryage/devtools "1.0.0"]
