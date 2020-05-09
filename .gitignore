@@ -2,5 +2,6 @@
 .nrepl-port
 node_modules
 public/js
+public/index.html
 config.edn
 dist
