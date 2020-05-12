@@ -16,6 +16,7 @@
                              :http-root          "public/js/test"}}
   :dist {:asset-path "/js"
          :module-hash-names true
+         :compuler-options {:infer-externs :auto}
          :modules {:main {:init-fn sourdojo.core/main}}
          :output-dir "dist/js"
          :target :browser

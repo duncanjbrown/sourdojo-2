@@ -1,0 +1,4 @@
+GoogleAuthProvider
+addScope
+currentUser
+linkWithPopup
