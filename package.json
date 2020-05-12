@@ -6,8 +6,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "shadow-cljs clj-run sourdojo.build/release local",
+    "clean": "rm -rf dist/js",
     "watch": "shadow-cljs clj-run sourdojo.build/watch",
-    "deploy": "aws --profile sourdojo s3 sync ./dist s3://sourdojo",
+    "clear-cloudfront-cache": "aws cloudfront create-invalidation --profile sourdojo --distribution-id EL31UBHNJMT8Q --paths \"/index.html\" \"/style.css\"",
+    "deploy": "aws --profile sourdojo s3 sync --delete ./dist s3://sourdojo && npm run clear-cloudfront-cache",
     "cljfmt": "clojure -Sdeps '{:deps {cljfmt {:mvn/version \"0.6.4\"}}}' -m cljfmt.main fix src/sourdojo",
     "lint": "clj-kondo --lint \"src\""
   },
