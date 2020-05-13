@@ -10,7 +10,7 @@
 (defn render [current-state]
   [:li#cursor
    [:div
-    [step-buttons/render @(rf/subscribe [:current-state])]
+    [step-buttons/render current-state]
     [add-note/render]
     [add-photo/render]
     [close-bake/render]]])
