@@ -7,11 +7,24 @@
             [cljs-time.format :as timeformat]
             ["react-flip-move" :as flip-move]))
 
+(defn- stringify-interval
+  [interval])
+
+(time/default-time-zone)
+(time/now)
+(time/now)
+
+(def interval (time/interval (time/from-default-time-zone (time/date-time 2020 5 17 20)) (time/to-default-time-zone (time/now))))
+
+(time/in-hours interval)
+
 (defn- format-date
   [jstime]
   ()
   (let [datetime (time/from-default-time-zone jstime)
-        formatter (timeformat/formatter "h:mma")]
+        formatter (timeformat/formatter "h:mma")
+        interval (-> time/now
+                     (time/interval datetime))]
     (timeformat/unparse formatter datetime)))
 
 (defn- photo-src
