@@ -15,7 +15,7 @@
    :after   (fn [context]
               (let [bake (get-in context [:effects :db :current-bake])]
                 (if-let [id (:id bake)]
-                  (firestore/set-doc (str "bakes/" id) bake :bake-updated-in-firestore)
+                  (firestore/set-doc (str "bakes/" id) bake)
                   (firestore/add-doc "bakes" bake :bake-created-in-firestore))
                 context))))
 

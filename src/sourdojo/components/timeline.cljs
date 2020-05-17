@@ -3,14 +3,15 @@
             [sourdojo.components.cursor :as cursor]
             [sourdojo.bake-state-machine :as bake-states]
             [reagent.core :as reagent]
-            [cljs-time.coerce :as time]
+            [cljs-time.core :as time]
             [cljs-time.format :as timeformat]
             ["react-flip-move" :as flip-move]))
 
 (defn- format-date
   [jstime]
-  (let [datetime (time/from-date jstime)
-        formatter (timeformat/formatter "h:mma, d MMMM Y")]
+  ()
+  (let [datetime (time/from-default-time-zone jstime)
+        formatter (timeformat/formatter "h:mma")]
     (timeformat/unparse formatter datetime)))
 
 (defn- photo-src
